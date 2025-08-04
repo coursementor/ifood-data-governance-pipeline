@@ -4,7 +4,7 @@
 
 **Sistema teste de governança de dados enterprise** para o domínio de delivery do iFood, processando 100+ milhões de pedidos mensais com foco em rastreabilidade, qualidade automatizada, segurança robusta e conformidade regulatória LGPD. **Além do seu desenvolvimento ter o objetivo principal de servir como aprendizando e testes/validações.**
 
-### **Status do Projeto Aproximadamente
+### Status do Projeto Aproximadamente
 - **Score de Qualidade**: 96.2%
 - **Conformidade LGPD**: 93%
 - **Cobertura de Testes**: 92%
