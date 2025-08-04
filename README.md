@@ -233,15 +233,15 @@ streamlit run demo_dashboard.py --server.port=8502
 
 ### Relatório de Conformidade
 
-<img width="1843" height="911" alt="7" src="https://github.com/user-attachments/assets/e3fbdf98-e65d-4dbc-a410-94f396533d64" />
-
 *Resumo geral da conformidade com LGPD, qualidade, segurança e retenção, incluindo status de monitoração e linhagem ativa.*
+
+<img width="1843" height="911" alt="7" src="https://github.com/user-attachments/assets/e3fbdf98-e65d-4dbc-a410-94f396533d64" />
 
 ### Controle de Acesso
 
-<img width="1852" height="867" alt="6" src="https://github.com/user-attachments/assets/2e811cad-55fb-4634-b1b1-1a0983c28087" />
-
 *Gerenciamento de usuários, roles e permissões com log detalhado de acessos e ações, garantindo rastreabilidade e auditoria.*
+
+<img width="1852" height="867" alt="6" src="https://github.com/user-attachments/assets/2e811cad-55fb-4634-b1b1-1a0983c28087" />
 
 ## **Funcionalidades Enterprise Implementadas**
 
