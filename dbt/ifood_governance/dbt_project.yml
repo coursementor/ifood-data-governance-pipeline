@@ -1,0 +1,120 @@
+# dbt Project Configuration for iFood Data Governance
+
+name: 'ifood_governance'
+version: '1.0.0'
+config-version: 2
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'ifood_governance'
+
+# These configurations specify where dbt should look for different types of files.
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+# Model configurations
+models:
+  ifood_governance:
+    # Bronze layer - raw data with minimal transformations
+    bronze:
+      +materialized: table
+      +schema: bronze
+      +tags: ["bronze", "raw"]
+      +meta:
+        layer: "bronze"
+        description: "Raw data from source systems"
+        
+    # Silver layer - cleaned and standardized data
+    silver:
+      +materialized: table
+      +schema: silver
+      +tags: ["silver", "cleaned"]
+      +meta:
+        layer: "silver"
+        description: "Cleaned and standardized data"
+        
+    # Gold layer - business-ready aggregated data
+    gold:
+      +materialized: table
+      +schema: gold
+      +tags: ["gold", "business"]
+      +meta:
+        layer: "gold"
+        description: "Business-ready aggregated data"
+
+# Test configurations
+tests:
+  +store_failures: true
+  +schema: test_failures
+
+# Snapshot configurations
+snapshots:
+  ifood_governance:
+    +target_schema: snapshots
+    +strategy: timestamp
+    +updated_at: updated_at
+
+# Seed configurations
+seeds:
+  ifood_governance:
+    +schema: seeds
+
+# Variables
+vars:
+  # Date variables
+  start_date: '2024-01-01'
+  end_date: '2024-12-31'
+  
+  # Data quality thresholds
+  completeness_threshold: 0.95
+  validity_threshold: 0.98
+  consistency_threshold: 0.90
+  
+  # Business rules
+  max_order_value: 1000.00
+  max_delivery_time_hours: 3
+  
+  # PII masking
+  enable_pii_masking: true
+  mask_cpf: true
+  mask_phone: true
+  mask_email: true
+
+# Macros
+dispatch:
+  - macro_namespace: dbt_utils
+    search_order: ['ifood_governance', 'dbt_utils']
+
+# Documentation
+docs:
+  generate: true
+  
+# Freshness
+freshness:
+  warn_after: {count: 12, period: hour}
+  error_after: {count: 24, period: hour}
+
+# On-run hooks
+on-run-start:
+  - "{{ log('Starting dbt run for iFood Data Governance', info=True) }}"
+  - "CREATE SCHEMA IF NOT EXISTS {{ target.schema }}_bronze"
+  - "CREATE SCHEMA IF NOT EXISTS {{ target.schema }}_silver"  
+  - "CREATE SCHEMA IF NOT EXISTS {{ target.schema }}_gold"
+
+on-run-end:
+  - "{{ log('Completed dbt run for iFood Data Governance', info=True) }}"
+  - "{{ audit_log_run_results() }}"
+
+# Quoting
+quoting:
+  database: false
+  schema: false
+  identifier: false
