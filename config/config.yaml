@@ -1,0 +1,125 @@
+# iFood Data Governance Pipeline Configuration
+
+# Database Connections
+databases:
+  postgres:
+    host: localhost
+    port: 5432
+    database: ifood_governance
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    
+  bigquery:
+    project_id: ${GCP_PROJECT_ID}
+    dataset: ifood_data_governance
+    credentials_path: ${GCP_CREDENTIALS_PATH}
+    
+  redis:
+    host: localhost
+    port: 6379
+    db: 0
+    password: ${REDIS_PASSWORD}
+
+# Storage Configuration
+storage:
+  data_lake:
+    provider: gcs  # gcs, s3, azure
+    bucket: ifood-data-lake
+    bronze_path: bronze/orders
+    silver_path: silver/orders
+    gold_path: gold/orders
+    
+  warehouse:
+    provider: bigquery
+    dataset: ifood_dw
+    
+# Data Contracts
+contracts:
+  orders:
+    schema_version: "1.0.0"
+    validation_level: strict  # strict, warning, disabled
+    auto_evolution: false
+    
+# Data Quality
+data_quality:
+  great_expectations:
+    store_backend: postgresql
+    validation_frequency: hourly
+    alert_channels:
+      - slack
+      - email
+    
+  thresholds:
+    completeness: 0.95
+    validity: 0.98
+    consistency: 0.90
+    timeliness_hours: 2
+
+# Security & Privacy
+security:
+  pii_fields:
+    - customer_cpf
+    - customer_phone
+    - customer_email
+    - delivery_address
+    
+  masking:
+    cpf: "***.***.***-**"
+    phone: "(**) ****-****"
+    email: "***@***.***"
+    
+  access_control:
+    roles:
+      - data_engineer
+      - data_analyst
+      - business_user
+      - auditor
+
+# Monitoring
+monitoring:
+  metrics:
+    retention_days: 90
+    aggregation_intervals:
+      - 1h
+      - 1d
+      - 1w
+      
+  alerts:
+    slack_webhook: ${SLACK_WEBHOOK_URL}
+    email_smtp:
+      host: ${SMTP_HOST}
+      port: 587
+      username: ${SMTP_USER}
+      password: ${SMTP_PASSWORD}
+
+# Airflow Configuration
+airflow:
+  dag_defaults:
+    owner: data-engineering
+    depends_on_past: false
+    start_date: 2024-01-01
+    email_on_failure: true
+    email_on_retry: false
+    retries: 2
+    retry_delay_minutes: 5
+
+# dbt Configuration
+dbt:
+  profiles_dir: ./dbt/profiles
+  project_dir: ./dbt/ifood_governance
+  target: dev
+  
+# Streamlit Dashboard
+dashboard:
+  host: 0.0.0.0
+  port: 8501
+  theme: light
+  auto_refresh_seconds: 30
+
+# Logging
+logging:
+  level: INFO
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: logs/governance.log
+  max_size_mb: 100
+  backup_count: 5
