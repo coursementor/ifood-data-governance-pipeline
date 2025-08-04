@@ -1,0 +1,319 @@
+# Data Contract: iFood Orders
+# Version: 1.0.0
+# Owner: Data Engineering Team
+# Last Updated: 2024-01-15
+
+contract:
+  name: ifood_orders
+  version: "1.0.0"
+  description: "Contrato de dados para pedidos do iFood - cobrindo todo o ciclo de vida do pedido"
+  owner: data-engineering@ifood.com
+  domain: delivery
+  
+  # SLA e Garantias
+  sla:
+    availability: 99.9%
+    freshness: 5 minutes
+    completeness: 95%
+    accuracy: 98%
+    
+  # Schema do Pedido
+  schema:
+    type: object
+    required:
+      - order_id
+      - customer_id
+      - restaurant_id
+      - order_timestamp
+      - status
+      - total_amount
+    
+    properties:
+      # Identificadores
+      order_id:
+        type: string
+        pattern: "^ORD[0-9]{10}$"
+        description: "ID único do pedido"
+        example: "ORD1234567890"
+        
+      customer_id:
+        type: string
+        pattern: "^CUST[0-9]{8}$"
+        description: "ID único do cliente"
+        example: "CUST12345678"
+        pii: true
+        
+      restaurant_id:
+        type: string
+        pattern: "^REST[0-9]{6}$"
+        description: "ID único do restaurante"
+        example: "REST123456"
+        
+      # Timestamps
+      order_timestamp:
+        type: string
+        format: datetime
+        description: "Timestamp de criação do pedido"
+        example: "2024-01-15T10:30:00Z"
+        
+      estimated_delivery_time:
+        type: string
+        format: datetime
+        description: "Tempo estimado de entrega"
+        example: "2024-01-15T11:15:00Z"
+        
+      actual_delivery_time:
+        type: string
+        format: datetime
+        description: "Tempo real de entrega"
+        example: "2024-01-15T11:20:00Z"
+        nullable: true
+        
+      # Status e Estados
+      status:
+        type: string
+        enum:
+          - pending
+          - confirmed
+          - preparing
+          - ready_for_pickup
+          - in_delivery
+          - delivered
+          - cancelled
+        description: "Status atual do pedido"
+        
+      cancellation_reason:
+        type: string
+        enum:
+          - customer_request
+          - restaurant_unavailable
+          - payment_failed
+          - delivery_failed
+          - system_error
+        description: "Motivo do cancelamento"
+        nullable: true
+        
+      # Valores Financeiros
+      total_amount:
+        type: number
+        minimum: 0
+        maximum: 10000
+        description: "Valor total do pedido em reais"
+        example: 45.90
+        
+      delivery_fee:
+        type: number
+        minimum: 0
+        maximum: 50
+        description: "Taxa de entrega em reais"
+        example: 5.90
+        
+      discount_amount:
+        type: number
+        minimum: 0
+        description: "Valor do desconto aplicado"
+        example: 10.00
+        default: 0
+        
+      # Informações do Cliente (PII)
+      customer_cpf:
+        type: string
+        pattern: "^[0-9]{3}\\.[0-9]{3}\\.[0-9]{3}-[0-9]{2}$"
+        description: "CPF do cliente"
+        example: "123.456.789-00"
+        pii: true
+        sensitive: true
+        
+      customer_phone:
+        type: string
+        pattern: "^\\([0-9]{2}\\) [0-9]{4,5}-[0-9]{4}$"
+        description: "Telefone do cliente"
+        example: "(11) 99999-9999"
+        pii: true
+        sensitive: true
+        
+      customer_email:
+        type: string
+        format: email
+        description: "Email do cliente"
+        example: "cliente@email.com"
+        pii: true
+        sensitive: true
+        
+      # Endereço de Entrega (PII)
+      delivery_address:
+        type: object
+        description: "Endereço de entrega"
+        pii: true
+        sensitive: true
+        properties:
+          street:
+            type: string
+            description: "Rua"
+          number:
+            type: string
+            description: "Número"
+          complement:
+            type: string
+            description: "Complemento"
+            nullable: true
+          neighborhood:
+            type: string
+            description: "Bairro"
+          city:
+            type: string
+            description: "Cidade"
+          state:
+            type: string
+            pattern: "^[A-Z]{2}$"
+            description: "Estado (UF)"
+          zipcode:
+            type: string
+            pattern: "^[0-9]{5}-[0-9]{3}$"
+            description: "CEP"
+            
+      # Itens do Pedido
+      items:
+        type: array
+        minItems: 1
+        description: "Itens do pedido"
+        items:
+          type: object
+          required:
+            - item_id
+            - name
+            - quantity
+            - unit_price
+          properties:
+            item_id:
+              type: string
+              description: "ID do item"
+            name:
+              type: string
+              description: "Nome do item"
+            quantity:
+              type: integer
+              minimum: 1
+              description: "Quantidade"
+            unit_price:
+              type: number
+              minimum: 0
+              description: "Preço unitário"
+            observations:
+              type: string
+              description: "Observações do item"
+              nullable: true
+              
+      # Metadados
+      channel:
+        type: string
+        enum:
+          - app
+          - website
+          - phone
+          - whatsapp
+        description: "Canal de origem do pedido"
+        
+      platform:
+        type: string
+        enum:
+          - ios
+          - android
+          - web
+          - mobile_web
+        description: "Plataforma utilizada"
+        
+      payment_method:
+        type: string
+        enum:
+          - credit_card
+          - debit_card
+          - pix
+          - cash
+          - voucher
+        description: "Método de pagamento"
+        
+      # Rastreabilidade
+      created_at:
+        type: string
+        format: datetime
+        description: "Timestamp de criação do registro"
+        
+      updated_at:
+        type: string
+        format: datetime
+        description: "Timestamp da última atualização"
+        
+      data_source:
+        type: string
+        description: "Sistema de origem dos dados"
+        example: "orders-api"
+        
+      batch_id:
+        type: string
+        description: "ID do batch de processamento"
+        example: "batch_20240115_103000"
+
+  # Regras de Qualidade
+  quality_rules:
+    - name: "order_id_uniqueness"
+      description: "Order ID deve ser único"
+      type: uniqueness
+      column: order_id
+      
+    - name: "total_amount_positive"
+      description: "Valor total deve ser positivo"
+      type: range
+      column: total_amount
+      min: 0.01
+      
+    - name: "status_valid_transitions"
+      description: "Transições de status devem ser válidas"
+      type: custom
+      rule: "status_transition_validator"
+      
+    - name: "delivery_time_logical"
+      description: "Tempo de entrega deve ser após criação do pedido"
+      type: custom
+      rule: "delivery_time_validator"
+      
+    - name: "cpf_format"
+      description: "CPF deve ter formato válido"
+      type: regex
+      column: customer_cpf
+      pattern: "^[0-9]{3}\\.[0-9]{3}\\.[0-9]{3}-[0-9]{2}$"
+
+  # Políticas de Privacidade
+  privacy:
+    retention_days: 2555  # 7 anos conforme LGPD
+    anonymization_fields:
+      - customer_cpf
+      - customer_phone
+      - customer_email
+      - delivery_address
+    masking_rules:
+      customer_cpf: "***.***.***-**"
+      customer_phone: "(**) ****-****"
+      customer_email: "***@***.***"
+      
+  # Alertas e Monitoramento
+  monitoring:
+    alerts:
+      - name: "high_cancellation_rate"
+        condition: "cancellation_rate > 0.15"
+        severity: warning
+        
+      - name: "delivery_delay"
+        condition: "avg_delivery_delay > 30 minutes"
+        severity: critical
+        
+      - name: "data_freshness"
+        condition: "last_update > 10 minutes"
+        severity: warning
+        
+    metrics:
+      - orders_per_hour
+      - avg_order_value
+      - cancellation_rate
+      - delivery_success_rate
+      - data_completeness_rate
