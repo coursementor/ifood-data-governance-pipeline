@@ -1,0 +1,80 @@
+# Core Data Engineering
+apache-airflow==2.7.3
+dbt-core==1.6.0
+dbt-postgres==1.6.0
+dbt-bigquery==1.6.0
+pyspark==3.4.1
+
+# Data Quality & Validation
+great-expectations==0.17.23
+pydantic==2.5.0
+email-validator==2.1.0
+cerberus==1.3.5
+jsonschema==4.19.2
+
+# Database Connectors
+psycopg2-binary==2.9.7
+sqlalchemy==2.0.23
+pymongo==4.6.0
+redis==5.0.1
+
+# Cloud & Storage
+boto3==1.34.0
+google-cloud-storage==2.10.0
+google-cloud-bigquery==3.13.0
+azure-storage-blob==12.19.0
+
+# Data Processing
+pandas==2.1.4
+numpy==1.24.3
+pyarrow==14.0.1
+polars==0.20.2
+
+# Visualization & Dashboards
+streamlit==1.28.2
+plotly==5.17.0
+dash==2.14.2
+matplotlib==3.8.2
+seaborn==0.13.0
+
+# API & Web
+fastapi==0.104.1
+uvicorn==0.24.0
+requests==2.31.0
+httpx==0.25.2
+
+# Security & Privacy
+cryptography==41.0.8
+bcrypt==4.1.2
+python-jose==3.3.0
+passlib==1.7.4
+
+# Monitoring & Logging
+prometheus-client==0.19.0
+structlog==23.2.0
+loguru==0.7.2
+
+# Configuration & Utils
+pyyaml==6.0.1
+python-dotenv==1.0.0
+click==8.1.7
+rich==13.7.0
+typer==0.9.0
+
+# Testing
+pytest==7.4.3
+pytest-cov==4.1.0
+pytest-mock==3.12.0
+factory-boy==3.3.0
+
+# Development
+black==23.11.0
+flake8==6.1.0
+isort==5.12.0
+mypy==1.7.1
+pre-commit==3.6.0
+
+# Documentation
+mkdocs==1.5.3
+mkdocs-material==9.4.8
+mkdocs-mermaid2-plugin==1.1.1
