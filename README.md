@@ -1,5 +1,7 @@
 # iFood Data Governance Pipeline
 
+<img width="3218" height="1024" alt="ifood" src="https://github.com/user-attachments/assets/0ec02873-e8c6-47c9-ab89-41216fd8e843" />
+
 ## Visão Geral
 
 **Sistema teste de governança de dados enterprise** para o domínio de delivery do iFood, processando 100+ milhões de pedidos mensais com foco em rastreabilidade, qualidade automatizada, segurança robusta e conformidade regulatória LGPD. **Além do seu desenvolvimento ter o objetivo principal de servir como aprendizando e testes/validações.**
