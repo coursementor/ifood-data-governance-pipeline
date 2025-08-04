@@ -201,6 +201,48 @@ netstat -an | findstr 8501
 streamlit run demo_dashboard.py --server.port=8502
 ```
 
+## Visão Geral do Sistema
+
+*Dashboard inicial com indicadores globais de qualidade, conformidade PII e uso do sistema, com tendências semanais e SLA operacional.*
+
+<img width="1886" height="770" alt="1" src="https://github.com/user-attachments/assets/cb70ab17-ca7e-47e1-9a77-268a87f88e92" />
+
+### Qualidade dos Dados
+
+*Exibe métricas por dataset, cobrindo completude, validade e consistência por camada, com alertas visuais de atenção.*
+
+<img width="1886" height="901" alt="2" src="https://github.com/user-attachments/assets/0c64a4b0-cacd-44f8-b99a-87d78dd877dd" />
+
+### Linhagem de Dados
+
+*Mostra o fluxo de transformação dos dados (Bronze → Silver → Gold → Dashboard) e detalhes de execução por dataset.*
+
+<img width="1893" height="735" alt="3" src="https://github.com/user-attachments/assets/7267af0a-c74d-483b-bca3-1c6ca7f634bc" />
+
+### Catálogo de Dados
+
+*Interface de busca e filtragem de datasets por camada, domínio e classificação, com estatísticas de PII e qualidade média.*
+
+<img width="1890" height="817" alt="4" src="https://github.com/user-attachments/assets/95791c05-5065-414e-868d-39f3cbd3a97c" />
+
+### Privacidade e Segurança
+
+*Demonstração visual de mascaramento de dados sensíveis, histórico de solicitações LGPD e conformidade por dataset.*
+
+<img width="1853" height="744" alt="5" src="https://github.com/user-attachments/assets/8fc62ddd-1b5f-4fe8-838f-f2171d43c771" />
+
+### Relatório de Conformidade
+
+<img width="1843" height="911" alt="7" src="https://github.com/user-attachments/assets/e3fbdf98-e65d-4dbc-a410-94f396533d64" />
+
+*Resumo geral da conformidade com LGPD, qualidade, segurança e retenção, incluindo status de monitoração e linhagem ativa.*
+
+### Controle de Acesso
+
+<img width="1852" height="867" alt="6" src="https://github.com/user-attachments/assets/2e811cad-55fb-4634-b1b1-1a0983c28087" />
+
+*Gerenciamento de usuários, roles e permissões com log detalhado de acessos e ações, garantindo rastreabilidade e auditoria.*
+
 ## **Funcionalidades Enterprise Implementadas**
 
 ### **Data Contracts - Validação Automática**
@@ -356,7 +398,7 @@ streamlit run demo_dashboard.py --server.port=8502
 ## **Suporte e Contribuição**
 
 ### **Contatos:**
-- **Email**: data-engineering@ifood.com
+- **Email**: data-engineering@adriele.com
 - **Slack**: #data-governance
 - **Documentação**: docs/
 - **Issues**: GitHub Issues
